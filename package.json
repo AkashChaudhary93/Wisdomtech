@@ -16,7 +16,7 @@
     "scripts": {
         "lint": "next lint",
         "build": "next build",
-        "dev": ".\\node_modules\\.bin\\next dev",
+        "dev": "next dev",
         "start": "next start"
     }
 }

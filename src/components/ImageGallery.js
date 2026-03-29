@@ -1,6 +1,7 @@
 'use client';
 import { useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import Tilt from 'react-parallax-tilt';
 
 export default function ImageGallery() {
   const scrollRef = useRef(null);
@@ -46,7 +47,7 @@ export default function ImageGallery() {
       <div className="relative w-full">
          <div 
            ref={scrollRef}
-           className="flex gap-6 overflow-x-auto snap-x snap-mandatory px-4 sm:px-6 lg:px-8 pb-8 pt-2"
+           className="flex gap-8 overflow-x-auto snap-x snap-mandatory px-4 sm:px-6 lg:px-8 pb-12 pt-4"
            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
          >
            <style jsx>{`
@@ -56,31 +57,32 @@ export default function ImageGallery() {
            `}</style>
            
            {images.map(img => (
-             <div 
-               key={img.id} 
-               className="min-w-[85vw] sm:min-w-[400px] h-[250px] sm:h-[320px] rounded-3xl shrink-0 snap-center relative overflow-hidden group shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-slate-200"
-             >
-               {/* Background Image */}
-               <img 
-                 src={img.url} 
-                 alt={`Dummy Image ${img.id}`} 
-                 className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
-               />
-               
-               {/* Dark gradient fade for text legibility */}
-               <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10 transition-opacity duration-300"></div>
-               
-               {/* Label & Disclaimer */}
-               <div className="absolute bottom-6 left-6 right-6 z-20">
-                 <h3 className="text-xl md:text-2xl font-extrabold text-white uppercase drop-shadow-md mb-3 flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-orange-500"></span>
-                    DUMMY IMAGE {img.id}
-                 </h3>
-                 <p className="text-xs text-white/90 font-medium leading-tight max-w-[90%] border-l-2 border-blue-600 pl-3 py-0.5">
-                   This image is only for demo purpose may be replaced with different image.
-                 </p>
+             <Tilt key={img.id} tiltMaxAngleX={10} tiltMaxAngleY={10} scale={1.03} transitionSpeed={2500} glareEnable={true} glareMaxOpacity={0.15} className="min-w-[85vw] sm:min-w-[400px] snap-center">
+               <div 
+                 className="h-[250px] sm:h-[320px] rounded-3xl relative overflow-hidden group shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-slate-200"
+               >
+                 {/* Background Image */}
+                 <img 
+                   src={img.url} 
+                   alt={`Dummy Image ${img.id}`} 
+                   className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                 />
+                 
+                 {/* Dark gradient fade for text legibility */}
+                 <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10 transition-opacity duration-300"></div>
+                 
+                 {/* Label & Disclaimer */}
+                 <div className="absolute bottom-8 left-8 right-8 z-20">
+                   <h3 className="text-xl md:text-2xl font-extrabold text-white uppercase drop-shadow-md mb-3 flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-orange-500"></span>
+                      DUMMY IMAGE {img.id}
+                   </h3>
+                   <p className="text-xs text-white/90 font-medium leading-tight max-w-[90%] border-l-2 border-indigo-500 pl-3 py-0.5">
+                     This image is only for demo purpose may be replaced with different image.
+                   </p>
+                 </div>
                </div>
-             </div>
+             </Tilt>
            ))}
          </div>
       </div>

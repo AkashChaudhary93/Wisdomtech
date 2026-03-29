@@ -1,8 +1,30 @@
 'use client';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { ArrowRight, Trophy, Users, Star } from 'lucide-react';
+import { useEffect } from 'react';
+import Tilt from 'react-parallax-tilt';
 
 export default function Hero() {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const springConfig = { damping: 50, stiffness: 300 };
+  const smoothX = useSpring(mouseX, springConfig);
+  const smoothY = useSpring(mouseY, springConfig);
+
+  // Background parallax movement
+  const bgX = useTransform(smoothX, [0, 1000], [0, 50]);
+  const bgY = useTransform(smoothY, [0, 1000], [0, 50]);
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, [mouseX, mouseY]);
+
   const containerVariants = {
     hidden: { opacity: 0 },
     show: {
@@ -17,8 +39,8 @@ export default function Hero() {
   };
 
   return (
-    <section className="pt-12 md:pt-16 pb-20 px-4 md:px-0">
-      <div className="max-w-7xl mx-auto">
+    <section className="pt-12 md:pt-16 pb-20 px-4 md:px-0 relative overflow-hidden">
+      <div className="max-w-7xl mx-auto relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Main Content */}
           <motion.div 
@@ -63,20 +85,25 @@ export default function Hero() {
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="relative"
           >
-            {/* Glowing Backdrop */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 rounded-[3rem] blur-3xl opacity-20 animate-pulse-slow"></div>
+            {/* Reactive Glowing Backdrop */}
+            <motion.div 
+              style={{ x: bgX, y: bgY }}
+              className="absolute inset-0 bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 rounded-[3rem] blur-3xl opacity-20 animate-pulse-slow"
+            ></motion.div>
 
-            <div className="glass p-8 relative z-10 shadow-2xl border-white/60">
-              <div className="flex gap-6 items-start mb-6">
-                <div className="w-20 h-20 rounded-2xl bg-slate-200 overflow-hidden shrink-0 border-4 border-white shadow-lg"></div>
-                <div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-1">Dr. S. K. Wisdom</h3>
-                  <p className="text-xs text-indigo-600 font-bold uppercase tracking-widest">Principal's Message</p>
+            <Tilt tiltMaxAngleX={10} tiltMaxAngleY={10} scale={1.02} transitionSpeed={2000} glareEnable={true} glareMaxOpacity={0.1} glarePosition="all" className="relative z-10">
+              <div className="glass p-8 shadow-2xl border-white/60">
+                <div className="flex gap-6 items-start mb-6">
+                  <div className="w-20 h-20 rounded-2xl bg-slate-200 overflow-hidden shrink-0 border-4 border-white shadow-lg"></div>
+                  <div>
+                    <h3 className="text-xl font-bold text-slate-900 mb-1">Dr. S. K. Wisdom</h3>
+                    <p className="text-xs text-indigo-600 font-bold uppercase tracking-widest">Principal's Message</p>
+                  </div>
                 </div>
+                <p className="text-slate-600 italic leading-relaxed mb-6">"Our mission is to foster an environment where creativity and curiosity are the primary fuels for academic excellence. We believe in providing every student with the tools to change the world."</p>
+                <button className="text-sm font-bold text-indigo-600 flex items-center gap-1 hover:underline">Read Full Message <ArrowRight size={14} /></button>
               </div>
-              <p className="text-slate-600 italic leading-relaxed mb-6">"Our mission is to foster an environment where creativity and curiosity are the primary fuels for academic excellence. We believe in providing every student with the tools to change the world."</p>
-              <button className="text-sm font-bold text-indigo-600 flex items-center gap-1 hover:underline">Read Full Message <ArrowRight size={14} /></button>
-            </div>
+            </Tilt>
 
             <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }} className="absolute -top-6 -right-6 glass p-4 shadow-xl z-20 flex items-center gap-3 border-orange-100">
               <div className="p-2 bg-orange-100 text-orange-600 rounded-lg"><Trophy size={18} /></div>
